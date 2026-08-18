@@ -566,21 +566,6 @@ button:disabled {
   .admin-grid {
     grid-template-columns: 1fr;
   }
-
-  .form-row,
-  .image-edit {
-    grid-template-columns: 1fr;
-  }
-
-  .editor-form {
-    grid-template-columns: 1fr;
-  }
-
-  .image-field {
-    grid-column: auto;
-    grid-row: auto;
-    position: static;
-  }
 }
 
 /* ---------- Tester landing ---------- */
@@ -1058,6 +1043,11 @@ button.danger {
   max-height: none;
 }
 
+/* รายการคำถามในลิ้นชักมือถือ: ให้ทั้งแผงเลื่อนแทนการเลื่อนสองชั้น */
+.exam-sheet .editor-list {
+  max-height: none;
+}
+
 /* ในลิ้นชักมือถือให้ทั้งแผงเลื่อนแทนการเลื่อนสองชั้น */
 .exam-sheet .search-results {
   max-height: none;
@@ -1109,6 +1099,16 @@ button.danger {
   /* แถบบนขณะทำข้อสอบ: เหลือแค่เคาน์เตอร์ + ส่งคำตอบ */
   .exam-run-topbar .actions .btn-link,
   .exam-run-topbar .actions button:not(.primary) {
+    display: none;
+  }
+
+  /* หน้าแก้ไขคำถาม: ซ่อนรายการข้าง ใช้ลิ้นชักล่าง
+     และซ่อนปุ่มบันทึกในฟอร์ม (มีปุ่มบันทึกติดแถบล่างแล้ว) */
+  .editor-list-panel {
+    display: none;
+  }
+
+  .form-save {
     display: none;
   }
 }

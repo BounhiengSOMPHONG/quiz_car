@@ -56,6 +56,7 @@ export default function AdminQuizPage() {
   const [saving, setSaving] = useState(false)
   const [status, setStatus] = useState(null)
   const [dirty, setDirty] = useState(false)
+  const [navOpen, setNavOpen] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -272,8 +273,49 @@ export default function AdminQuizPage() {
 
   const previewUrl = imageFile || (!imageRemoved && form.image ? resolveImageUrl(form.image) : null)
 
+  // ช่องค้นหา + รายการคำถาม ใช้ทั้ง sidebar (จอปกติ) และลิ้นชักล่าง (มือถือ)
+  const listPanel = (onPick) => (
+    <>
+      <div className="row">
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="ค้นหาคำถาม..."
+          style={{ width: '100%' }}
+        />
+      </div>
+
+      <div className="editor-list">
+        {navIndexes.map((i) => {
+          const q = questions[i]
+          const classes = ['editor-item']
+          if (qid(q) === selectedId) classes.push('active')
+          if (q.active === false) classes.push('inactive')
+          if (imagePath(q)) classes.push('hasimg')
+          return (
+            <button
+              key={qid(q)}
+              type="button"
+              className={classes.join(' ')}
+              onClick={() => {
+                openQuestion(q)
+                onPick()
+              }}
+            >
+              <span className="editor-num">
+                {i + 1}. {qid(q)}
+              </span>
+              <span className="editor-text">{q.question || '(ไม่มีคำถาม)'}</span>
+            </button>
+          )
+        })}
+      </div>
+    </>
+  )
+
   return (
-    <div className="wrap">
+    <div className="wrap exam-run">
       <div className="topbar">
         <div>
           <h1>แก้ไขคำถาม</h1>
@@ -292,47 +334,16 @@ export default function AdminQuizPage() {
       </div>
 
       <div className="grid">
-        <aside className="panel">
+        <aside className="panel editor-list-panel">
           <div className="small">
             ทั้งหมด {questions.length} ข้อ
-          </div>
-
-          <div className="row">
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              placeholder="ค้นหาคำถาม..."
-              style={{ width: '100%' }}
-            />
           </div>
 
           <button type="button" className="primary" style={{ width: '100%' }} onClick={startNew}>
             + เพิ่มคำถามใหม่
           </button>
 
-          <div className="editor-list">
-            {navIndexes.map((i) => {
-              const q = questions[i]
-              const classes = ['editor-item']
-              if (qid(q) === selectedId) classes.push('active')
-              if (q.active === false) classes.push('inactive')
-              if (imagePath(q)) classes.push('hasimg')
-              return (
-                <button
-                  key={qid(q)}
-                  type="button"
-                  className={classes.join(' ')}
-                  onClick={() => openQuestion(q)}
-                >
-                  <span className="editor-num">
-                    {i + 1}. {qid(q)}
-                  </span>
-                  <span className="editor-text">{q.question || '(ไม่มีคำถาม)'}</span>
-                </button>
-              )
-            })}
-          </div>
+          {listPanel(() => {})}
         </aside>
 
         <main className="panel" onPaste={onPasteImage}>
@@ -371,7 +382,12 @@ export default function AdminQuizPage() {
                   ถัดไป →
                 </button>
               </div>
-              <button type="button" className="primary" onClick={handleSave} disabled={saving}>
+              <button
+                type="button"
+                className="primary form-save"
+                onClick={handleSave}
+                disabled={saving}
+              >
                 {saving ? 'กำลังบันทึก...' : selectedId ? 'บันทึกการแก้ไข' : 'เพิ่มคำถามใหม่'}
               </button>
             </div>
@@ -548,6 +564,54 @@ export default function AdminQuizPage() {
           </div>
         </main>
       </div>
+
+      <nav className="exam-navbar">
+        <span className="exam-meta">
+          {selectedId ? (
+            <>
+              ข้อ <b>{currentPos >= 0 ? currentPos + 1 : '-'}</b>/{navIndexes.length}
+            </>
+          ) : (
+            <b>ข้อใหม่</b>
+          )}
+        </span>
+        <button type="button" className="primary" onClick={() => setNavOpen(true)}>
+          เลือกข้อ
+        </button>
+        <button type="button" className="primary" onClick={handleSave} disabled={saving}>
+          {saving ? 'กำลังบันทึก...' : 'บันทึก'}
+        </button>
+      </nav>
+
+      {navOpen ? (
+        <div className="sheet-backdrop" onClick={() => setNavOpen(false)}>
+          <div
+            className="exam-sheet"
+            role="dialog"
+            aria-label="เลือกคำถาม"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="sheet-head">
+              <span>เลือกคำถาม · ทั้งหมด {questions.length} ข้อ</span>
+              <button type="button" onClick={() => setNavOpen(false)}>
+                ปิด
+              </button>
+            </div>
+            <button
+              type="button"
+              className="primary"
+              style={{ width: '100%' }}
+              onClick={() => {
+                startNew()
+                setNavOpen(false)
+              }}
+            >
+              + เพิ่มคำถามใหม่
+            </button>
+            {listPanel(() => setNavOpen(false))}
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }
