@@ -935,3 +935,163 @@ button.danger {
 .dirty-mark {
   color: #b45309;
 }
+
+/* ---------- มือถือ (จอแคบ) ---------- */
+
+@media (max-width: 640px) {
+  .wrap {
+    padding: 12px;
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+
+  .topbar {
+    top: 6px;
+    padding: 10px 14px;
+    border-radius: 14px;
+  }
+
+  .topbar h1 {
+    font-size: 18px;
+  }
+
+  /* ปุ่มในแถบเครื่องมือขยายเต็มความกว้าง กดง่ายด้วยนิ้ว */
+  .actions > button,
+  .actions > .btn-link {
+    flex: 1;
+  }
+
+  /* เป้าหมายการแตะขั้นต่ำ 44px */
+  button,
+  .btn-link {
+    min-height: 44px;
+  }
+
+  /* หน้าแรก Tester: ปุ่มเลือกโหมดเรียงแนวตั้งเต็มความกว้าง */
+  .landing-actions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  /* กล่องรูปภาพย่อความสูงลง ประหยัดพื้นที่จอ */
+  .image-box {
+    min-height: 180px;
+  }
+
+  .image-box img {
+    max-height: 280px;
+  }
+
+  .landing-actions .big-link {
+    width: 100%;
+    padding: 16px 20px;
+    font-size: 17px;
+  }
+
+  /* ตารางประวัติการสอบ: ย่อให้อ่านง่ายบนจอแคบ */
+  .admin-table {
+    font-size: 13px;
+  }
+
+  .admin-table th,
+  .admin-table td {
+    padding: 8px 6px;
+  }
+}
+
+/* ---------- แผงเลือกข้อ (ลิ้นชักจากด้านล่าง) บนมือถือ ---------- */
+
+.exam-navbar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  display: none;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  padding-bottom: calc(10px + env(safe-area-inset-bottom));
+  background: var(--card);
+  border-top: 1px solid var(--line);
+  box-shadow: 0 -6px 20px rgba(15, 23, 42, 0.12);
+}
+
+.exam-navbar .exam-meta {
+  flex: 1;
+}
+
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgba(15, 23, 42, 0.45);
+  display: flex;
+  align-items: flex-end;
+  animation: fade-in 0.15s ease-out;
+}
+
+.exam-sheet {
+  width: 100%;
+  max-height: 75vh;
+  overflow: auto;
+  background: var(--card);
+  border-radius: 18px 18px 0 0;
+  padding: 14px;
+  padding-bottom: calc(14px + env(safe-area-inset-bottom));
+  animation: sheet-up 0.2s ease-out;
+}
+
+.exam-sheet .qnav {
+  max-height: none;
+}
+
+.sheet-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+@keyframes sheet-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 900px) {
+  /* ซ่อนตารางเลือกข้อด้านข้าง ใช้ลิ้นชักล่างแทน */
+  .exam-nav-panel {
+    display: none;
+  }
+
+  .exam-navbar {
+    display: flex;
+  }
+
+  /* เว้นที่ว่างด้านล่างไม่ให้แถบล่างทับเนื้อหา */
+  .wrap.exam-run {
+    padding-bottom: calc(90px + env(safe-area-inset-bottom));
+  }
+
+  /* แถบบนขณะทำข้อสอบ: เหลือแค่เคาน์เตอร์ + ส่งคำตอบ */
+  .exam-run-topbar .actions .btn-link,
+  .exam-run-topbar .actions button:not(.primary) {
+    display: none;
+  }
+}

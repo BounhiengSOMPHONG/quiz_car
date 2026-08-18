@@ -58,6 +58,7 @@ export default function ExamPage() {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [result, setResult] = useState(null)
   const [imageError, setImageError] = useState(false)
+  const [navOpen, setNavOpen] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -103,6 +104,7 @@ export default function ExamPage() {
     setAnswers({})
     setCurrentIndex(0)
     setResult(null)
+    setNavOpen(false)
     setPhase('running')
   }
 
@@ -312,9 +314,26 @@ export default function ExamPage() {
   const path = imagePath(currentQuestion)
   const imageUrl = resolveImageUrl(path)
 
+  const renderQnav = (onSelect) =>
+    exam.map((q, i) => {
+      const classes = ['qbtn']
+      if (i === currentIndex) classes.push('active')
+      if (answers[qid(q)]) classes.push('answered')
+      return (
+        <button
+          key={qid(q)}
+          type="button"
+          className={classes.join(' ')}
+          onClick={() => onSelect(i)}
+        >
+          {i + 1}
+        </button>
+      )
+    })
+
   return (
-    <div className="wrap">
-      <div className="topbar">
+    <div className="wrap exam-run">
+      <div className="topbar exam-run-topbar">
         <div>
           <h1>แบบทดสอบ</h1>
           <div className="small">
@@ -338,25 +357,9 @@ export default function ExamPage() {
       </div>
 
       <div className="grid">
-        <aside className="panel">
+        <aside className="panel exam-nav-panel">
           <div className="small">เลือกคำตอบได้ทุกข้อ และย้อนแก้ได้ก่อนส่ง</div>
-          <div className="qnav">
-            {exam.map((q, i) => {
-              const classes = ['qbtn']
-              if (i === currentIndex) classes.push('active')
-              if (answers[qid(q)]) classes.push('answered')
-              return (
-                <button
-                  key={qid(q)}
-                  type="button"
-                  className={classes.join(' ')}
-                  onClick={() => setCurrentIndex(i)}
-                >
-                  {i + 1}
-                </button>
-              )
-            })}
-          </div>
+          <div className="qnav">{renderQnav(setCurrentIndex)}</div>
         </aside>
 
         <main className="panel">
@@ -432,6 +435,41 @@ export default function ExamPage() {
           </div>
         </main>
       </div>
+
+      <nav className="exam-navbar">
+        <span className="exam-meta">
+          ตอบแล้ว <b>{answeredCount}</b>/{exam.length} · ยังไม่ตอบ <b>{unanswered}</b>
+        </span>
+        <button type="button" className="primary" onClick={() => setNavOpen(true)}>
+          เลือกข้อ
+        </button>
+      </nav>
+
+      {navOpen ? (
+        <div className="sheet-backdrop" onClick={() => setNavOpen(false)}>
+          <div
+            className="exam-sheet"
+            role="dialog"
+            aria-label="เลือกข้อ"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="sheet-head">
+              <span>
+                เลือกข้อ · ตอบแล้ว {answeredCount}/{exam.length}
+              </span>
+              <button type="button" onClick={() => setNavOpen(false)}>
+                ปิด
+              </button>
+            </div>
+            <div className="qnav">
+              {renderQnav((i) => {
+                setCurrentIndex(i)
+                setNavOpen(false)
+              })}
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }
