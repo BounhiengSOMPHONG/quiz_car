@@ -122,50 +122,50 @@ export default function QuizView({ titleSuffix = '' }) {
         <div className="search-results">
           {navIndexes.length === 0 ? (
             <div className="small">ไม่พบคำถามที่ตรงกับ "{search.trim()}"</div>
-          ) : null}
-          {navIndexes.slice(0, 8).map((i) => {
-            const q = questions[i]
-            return (
-              <button
-                key={qid(q)}
-                type="button"
-                className="search-item"
-                onClick={() => onSelect(i)}
-              >
-                <b>{i + 1}.</b> {String(q.question || '').slice(0, 80)}
-              </button>
-            )
-          })}
-          {navIndexes.length > 8 ? (
-            <div className="small">
-              และอีก {navIndexes.length - 8} ข้อ — เลือกจากเลขด้านล่างได้
-            </div>
-          ) : null}
+          ) : (
+            navIndexes.map((i) => {
+              const q = questions[i]
+              return (
+                <button
+                  key={qid(q)}
+                  type="button"
+                  className="search-item"
+                  onClick={() => onSelect(i)}
+                >
+                  <b>{i + 1}.</b> {String(q.question || '').slice(0, 80)}
+                </button>
+              )
+            })
+          )}
         </div>
       ) : null}
 
-      <hr style={{ border: 0, borderTop: '1px solid var(--line)', margin: '12px 0' }} />
+      {!search.trim() ? (
+        <>
+          <hr style={{ border: 0, borderTop: '1px solid var(--line)', margin: '12px 0' }} />
 
-      <div className="qnav">
-        {navIndexes.map((i) => {
-          const q = questions[i]
-          const classes = ['qbtn']
-          if (i === currentIndex) classes.push('active')
-          if (imagePath(q)) classes.push('hasimg')
+          <div className="qnav">
+            {navIndexes.map((i) => {
+              const q = questions[i]
+              const classes = ['qbtn']
+              if (i === currentIndex) classes.push('active')
+              if (imagePath(q)) classes.push('hasimg')
 
-          return (
-            <button
-              key={qid(q)}
-              type="button"
-              className={classes.join(' ')}
-              title={`${qid(q)}${imagePath(q) ? ' มีรูปแล้ว' : ''}`}
-              onClick={() => onSelect(i)}
-            >
-              {i + 1}
-            </button>
-          )
-        })}
-      </div>
+              return (
+                <button
+                  key={qid(q)}
+                  type="button"
+                  className={classes.join(' ')}
+                  title={`${qid(q)}${imagePath(q) ? ' มีรูปแล้ว' : ''}`}
+                  onClick={() => onSelect(i)}
+                >
+                  {i + 1}
+                </button>
+              )
+            })}
+          </div>
+        </>
+      ) : null}
     </>
   )
 

@@ -131,7 +131,7 @@ button:disabled {
 .search-results {
   display: grid;
   gap: 6px;
-  max-height: 200px;
+  max-height: 380px;
   overflow-y: auto;
   margin-top: 8px;
   padding-right: 4px;
@@ -1052,6 +1052,11 @@ button.danger {
 }
 
 .exam-sheet .qnav {
+  max-height: none;
+}
+
+/* ในลิ้นชักมือถือให้ทั้งแผงเลื่อนแทนการเลื่อนสองชั้น */
+.exam-sheet .search-results {
   max-height: none;
 }
 
