@@ -326,7 +326,7 @@ export default function AdminQuizPage() {
                   onClick={() => openQuestion(q)}
                 >
                   <span className="editor-num">
-                    {q.number}. {qid(q)}
+                    {i + 1}. {qid(q)}
                   </span>
                   <span className="editor-text">{q.question || '(ไม่มีคำถาม)'}</span>
                 </button>
