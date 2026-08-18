@@ -262,6 +262,15 @@ button:disabled {
   background: #eff6ff;
 }
 
+/* โหมดฝึกซ้อม: แสดงเฉลยทันที กดไม่ได้ */
+.reveal-options .option {
+  cursor: default;
+}
+
+.reveal-options .option:not(.correct):hover {
+  border-color: var(--line);
+}
+
 .option.correct {
   border-color: #22c55e;
   background: #f0fdf4;
