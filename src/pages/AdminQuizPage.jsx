@@ -442,12 +442,22 @@ export default function AdminQuizPage() {
                     placeholder="ກ"
                     title="ตัวอักษรกำกับตัวเลือก"
                   />
-                  <input
-                    type="text"
+                  <textarea
+                    ref={(el) => {
+                      // ขยายความสูงตามเนื้อหาให้เห็นข้อความทั้งหมด
+                      if (!el) return
+                      el.style.height = 'auto'
+                      el.style.height = `${el.scrollHeight}px`
+                    }}
                     value={a.text}
                     onChange={(e) => updateAnswer(idx, { text: e.target.value })}
+                    onInput={(e) => {
+                      e.currentTarget.style.height = 'auto'
+                      e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`
+                    }}
                     className="answer-text"
                     placeholder={`ข้อความตัวเลือก ${a.id}`}
+                    rows={1}
                   />
                   <label className="radio-label" title="คำตอบที่ถูก">
                     <input

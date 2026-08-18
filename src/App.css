@@ -876,6 +876,9 @@ button.big {
 .answer-text {
   flex: 1;
   min-width: 160px;
+  min-height: 38px;
+  resize: none;
+  overflow: hidden;
 }
 
 .radio-label {
