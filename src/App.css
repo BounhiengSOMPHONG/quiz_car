@@ -780,6 +780,26 @@ button.big {
   margin-bottom: 12px;
 }
 
+.editor-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.editor-nav {
+  display: flex;
+  gap: 6px;
+}
+
+.editor-nav button {
+  white-space: nowrap;
+}
+
+.pos-mark {
+  color: var(--muted);
+}
+
 .editor-head + .form-status {
   margin-bottom: 12px;
 }

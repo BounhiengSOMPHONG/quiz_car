@@ -110,6 +110,16 @@ export default function AdminQuizPage() {
     setDirty(false)
   }
 
+  const currentPos = selectedId
+    ? navIndexes.findIndex((i) => qid(questions[i]) === selectedId)
+    : -1
+
+  function goToOffset(offset) {
+    const nextPos = currentPos + offset
+    if (nextPos < 0 || nextPos >= navIndexes.length) return
+    openQuestion(questions[navIndexes[nextPos]])
+  }
+
   function startNew() {
     if (!confirmDiscard()) return
     setSelectedId(null)
@@ -162,10 +172,7 @@ export default function AdminQuizPage() {
     setDirty(true)
   }
 
-  function onPickFile(e) {
-    const file = e.target.files && e.target.files[0]
-    e.target.value = ''
-    if (!file) return
+  function applyImageFile(file) {
     if (file.size > MAX_IMAGE_BYTES) {
       setStatus({ ok: false, text: 'ไฟล์รูปใหญ่เกินไป (สูงสุด 8MB)' })
       return
@@ -176,9 +183,27 @@ export default function AdminQuizPage() {
       setImageRemoved(false)
       setImagePreviewError(false)
       setDirty(true)
+      setStatus({ ok: true, text: 'ได้รูปแล้ว — กด "บันทึกการแก้ไข" เพื่อยืนยัน' })
     }
     reader.onerror = () => setStatus({ ok: false, text: 'อ่านไฟล์รูปไม่สำเร็จ' })
     reader.readAsDataURL(file)
+  }
+
+  function onPickFile(e) {
+    const file = e.target.files && e.target.files[0]
+    e.target.value = ''
+    if (file) applyImageFile(file)
+  }
+
+  function onPasteImage(e) {
+    const items = e.clipboardData && e.clipboardData.items
+    if (!items) return
+    const file = Array.from(items)
+      .map((item) => (item.type.startsWith('image/') ? item.getAsFile() : null))
+      .find(Boolean)
+    if (!file) return
+    e.preventDefault()
+    applyImageFile(file)
   }
 
   function removeImage() {
@@ -310,12 +335,15 @@ export default function AdminQuizPage() {
           </div>
         </aside>
 
-        <main className="panel">
+        <main className="panel" onPaste={onPasteImage}>
           <div className="editor-head">
             <div className="small">
               {selectedId ? (
                 <>
                   กำลังแก้ไข: <b>{selectedId}</b>
+                  {currentPos >= 0 ? (
+                    <span className="pos-mark"> · ข้อที่ {currentPos + 1}/{navIndexes.length}</span>
+                  ) : null}
                 </>
               ) : (
                 <>
@@ -324,9 +352,29 @@ export default function AdminQuizPage() {
               )}
               {dirty ? <span className="dirty-mark"> · มีการแก้ไขที่ยังไม่บันทึก</span> : null}
             </div>
-            <button type="button" className="primary" onClick={handleSave} disabled={saving}>
-              {saving ? 'กำลังบันทึก...' : selectedId ? 'บันทึกการแก้ไข' : 'เพิ่มคำถามใหม่'}
-            </button>
+            <div className="editor-actions">
+              <div className="editor-nav">
+                <button
+                  type="button"
+                  onClick={() => goToOffset(-1)}
+                  disabled={currentPos <= 0}
+                  title="ข้อก่อนหน้า"
+                >
+                  ← ก่อนหน้า
+                </button>
+                <button
+                  type="button"
+                  onClick={() => goToOffset(1)}
+                  disabled={currentPos < 0 || currentPos >= navIndexes.length - 1}
+                  title="ข้อถัดไป"
+                >
+                  ถัดไป →
+                </button>
+              </div>
+              <button type="button" className="primary" onClick={handleSave} disabled={saving}>
+                {saving ? 'กำลังบันทึก...' : selectedId ? 'บันทึกการแก้ไข' : 'เพิ่มคำถามใหม่'}
+              </button>
+            </div>
           </div>
 
           {status ? (
@@ -473,6 +521,9 @@ export default function AdminQuizPage() {
                   <button type="button" onClick={removeImage} disabled={!previewUrl && !imageRemoved}>
                     ลบรูป
                   </button>
+                  <div className="small pasteHint">
+                    หรือกด <b>Ctrl+V</b> เพื่อวางรูปที่ copy ไว้ (Screenshot, โปรแกรมต่าง ๆ)
+                  </div>
                   <div className="small fileName">
                     {imageFile
                       ? 'รูปใหม่ (ยังไม่บันทึก)'
