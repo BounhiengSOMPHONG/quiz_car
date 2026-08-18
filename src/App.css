@@ -1111,4 +1111,20 @@ button.danger {
   .form-save {
     display: none;
   }
+
+  /* ฟอร์มแก้ไขคำถามเป็น 1 คอลัมน์ (ต้องอยู่หลังกฎหลักถึงจะชนะ) */
+  .form-row,
+  .image-edit {
+    grid-template-columns: 1fr;
+  }
+
+  .editor-form {
+    grid-template-columns: 1fr;
+  }
+
+  .image-field {
+    grid-column: auto;
+    grid-row: auto;
+    position: static;
+  }
 }
