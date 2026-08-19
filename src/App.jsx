@@ -7,6 +7,7 @@ import AdminQuizPage from './pages/AdminQuizPage'
 import ExamPage from './pages/ExamPage'
 import LoginPage from './pages/LoginPage'
 import TesterPage from './pages/TesterPage'
+import { ThemeProvider } from './theme/ThemeContext'
 import './App.css'
 
 function HomeRedirect() {
@@ -21,54 +22,56 @@ function HomeRedirect() {
 
 export default function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/login" element={<LoginPage />} />
-          <Route
-            path="/tester"
-            element={
-              <ProtectedRoute role="tester">
-                <TesterPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/tester/exam"
-            element={
-              <ProtectedRoute role="tester">
-                <ExamPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/tester/practice"
-            element={
-              <ProtectedRoute role="tester">
-                <QuizView />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin"
-            element={
-              <ProtectedRoute role="admin">
-                <AdminPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/admin/quiz"
-            element={
-              <ProtectedRoute role="admin">
-                <AdminQuizPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route path="/" element={<HomeRedirect />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+    <ThemeProvider>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/login" element={<LoginPage />} />
+            <Route
+              path="/tester"
+              element={
+                <ProtectedRoute role="tester">
+                  <TesterPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/tester/exam"
+              element={
+                <ProtectedRoute role="tester">
+                  <ExamPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/tester/practice"
+              element={
+                <ProtectedRoute role="tester">
+                  <QuizView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin"
+              element={
+                <ProtectedRoute role="admin">
+                  <AdminPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/admin/quiz"
+              element={
+                <ProtectedRoute role="admin">
+                  <AdminQuizPage />
+                </ProtectedRoute>
+              }
+            />
+            <Route path="/" element={<HomeRedirect />} />
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
+    </ThemeProvider>
   )
 }

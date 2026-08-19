@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { Navigate, useLocation, useNavigate } from 'react-router-dom'
+import { Car } from 'lucide-react'
 import { useAuth } from '../auth/AuthContext'
 import { homePathForRole } from '../auth/auth'
+import ThemeToggle from '../components/ThemeToggle'
 
 export default function LoginPage() {
   const { user, login } = useAuth()
@@ -41,7 +43,13 @@ export default function LoginPage() {
 
   return (
     <div className="login-page">
+      <div className="login-theme">
+        <ThemeToggle />
+      </div>
       <div className="login-card">
+        <div className="login-brand">
+          <Car size={26} strokeWidth={2} />
+        </div>
         <h1>Driving Quiz</h1>
         <p className="small">เข้าสู่ระบบเพื่อทำแบบทดสอบ</p>
 

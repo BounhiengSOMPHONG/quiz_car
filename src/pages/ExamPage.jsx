@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { fetchQuestions } from '../api'
 import { useAuth } from '../auth/AuthContext'
 import { answersKey, attemptsKey } from '../auth/auth'
+import ThemeToggle from '../components/ThemeToggle'
 import {
   EXAM_QUESTION_COUNT,
   categoryTitle,
@@ -45,6 +46,48 @@ function passRuleText(settings, total) {
   }
   const percent = settings?.pass_score_percent ?? 80
   return `${percent}% (ต้องได้อย่างน้อย ${Math.ceil((total * percent) / 100)}/${total} ข้อ)`
+}
+
+// ริงแสดงเปอร์เซ็นต์คะแนน พร้อมตัวเลขค่อย ๆ นับขึ้น
+function ScoreRing({ percent, pass }) {
+  const [display, setDisplay] = useState(0)
+
+  useEffect(() => {
+    let raf
+    const start = performance.now()
+    const duration = 700
+
+    const tick = (t) => {
+      const p = Math.min(1, (t - start) / duration)
+      setDisplay(Math.round(percent * p))
+      if (p < 1) raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [percent])
+
+  const R = 52
+  const C = 2 * Math.PI * R
+  const filled = (display / 100) * C
+
+  return (
+    <div className={`score-ring ${pass ? 'ok' : 'bad'}`} role="img" aria-label={`${percent}%`}>
+      <svg viewBox="0 0 120 120">
+        <circle className="ring-track" cx="60" cy="60" r={R} />
+        <circle
+          className="ring-fill"
+          cx="60"
+          cy="60"
+          r={R}
+          strokeDasharray={`${filled} ${C - filled}`}
+        />
+      </svg>
+      <div className="ring-label">
+        <b>{display}%</b>
+        <span>{pass ? 'ผ่าน' : 'ไม่ผ่าน'}</span>
+      </div>
+    </div>
+  )
 }
 
 export default function ExamPage() {
@@ -180,6 +223,7 @@ export default function ExamPage() {
             <button type="button" onClick={logout}>
               ออกจากระบบ
             </button>
+            <ThemeToggle />
           </div>
         </div>
 
@@ -203,6 +247,9 @@ export default function ExamPage() {
   if (phase === 'review' && result) {
     const { attempt } = result
     const showExplanation = data.settings?.show_explanation_after_answer
+    const percent = Math.round((attempt.score / attempt.total) * 100)
+    const wrong = attempt.items.filter((i) => !i.isCorrect && i.chosen !== null).length
+    const unansweredCount = attempt.items.filter((i) => i.chosen === null).length
 
     return (
       <div className="wrap">
@@ -220,15 +267,38 @@ export default function ExamPage() {
             <button type="button" onClick={logout}>
               ออกจากระบบ
             </button>
+            <ThemeToggle />
           </div>
         </div>
 
-        <div className={`result ${attempt.pass ? 'ok' : 'bad'} exam-score`}>
-          <b>
-            {attempt.pass ? 'ผ่านเกณฑ์' : 'ยังไม่ผ่านเกณฑ์'} — {attempt.score}/{attempt.total} คะแนน
-          </b>
-          <br />
-          เกณฑ์ผ่าน {passRuleText(data.settings, attempt.total)}
+        <div className="score-card panel">
+          <ScoreRing percent={percent} pass={attempt.pass} />
+          <div className="score-summary">
+            <div className={`score-result ${attempt.pass ? 'ok' : 'bad'}`}>
+              {attempt.pass ? 'ผ่านเกณฑ์' : 'ยังไม่ผ่านเกณฑ์'}
+            </div>
+            <div className="small">เกณฑ์ผ่าน {passRuleText(data.settings, attempt.total)}</div>
+            <div className="stats">
+              <div className="stat">
+                <span>ถูก</span>
+                <b>{attempt.score}</b>
+              </div>
+              <div className="stat">
+                <span>ผิด</span>
+                <b>{wrong}</b>
+              </div>
+              <div className="stat">
+                <span>ไม่ตอบ</span>
+                <b>{unansweredCount}</b>
+              </div>
+              <div className="stat">
+                <span>คะแนนรวม</span>
+                <b>
+                  {attempt.score}/{attempt.total}
+                </b>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div className="exam-actions">
@@ -353,6 +423,7 @@ export default function ExamPage() {
           <button type="button" onClick={logout}>
             ออกจากระบบ
           </button>
+          <ThemeToggle />
         </div>
       </div>
 

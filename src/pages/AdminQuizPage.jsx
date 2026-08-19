@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { addQuestion, fetchQuestions, saveQuestion } from '../api'
 import { useAuth } from '../auth/AuthContext'
+import ThemeToggle from '../components/ThemeToggle'
 import { filterQuestionIndexes, imagePath, qid, resolveImageUrl } from '../utils'
 
 const MAX_IMAGE_BYTES = 8 * 1024 * 1024
@@ -330,6 +331,7 @@ export default function AdminQuizPage() {
           <button type="button" onClick={logout}>
             ออกจากระบบ
           </button>
+          <ThemeToggle />
         </div>
       </div>
 

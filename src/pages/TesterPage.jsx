@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom'
+import { GraduationCap } from 'lucide-react'
 import { useAuth } from '../auth/AuthContext'
 import { attemptsKey } from '../auth/auth'
+import ThemeToggle from '../components/ThemeToggle'
 import { EXAM_QUESTION_COUNT } from '../utils'
 
 function loadAttempts(username) {
@@ -37,14 +39,22 @@ export default function TesterPage() {
           <button type="button" onClick={logout}>
             ออกจากระบบ
           </button>
+          <ThemeToggle />
         </div>
       </div>
 
       <div className="panel landing">
-        <h2>ยินดีต้อนรับ, {user.displayName}</h2>
-        <p className="small">
-          เลือกโหมดด้านล่าง — โหมดสอบจะสุ่มคำถาม {EXAM_QUESTION_COUNT} ข้อและตรวจคำตอบเมื่อส่งเท่านั้น
-        </p>
+        <div className="landing-hero">
+          <div className="landing-icon">
+            <GraduationCap size={24} strokeWidth={2} />
+          </div>
+          <div>
+            <h2>ยินดีต้อนรับ, {user.displayName}</h2>
+            <p className="small">
+              เลือกโหมดด้านล่าง — โหมดสอบจะสุ่มคำถาม {EXAM_QUESTION_COUNT} ข้อและตรวจคำตอบเมื่อส่งเท่านั้น
+            </p>
+          </div>
+        </div>
         <div className="landing-actions">
           <Link to="/tester/exam" className="btn-link primary-link big-link">
             เริ่มแบบทดสอบ {EXAM_QUESTION_COUNT} ข้อ

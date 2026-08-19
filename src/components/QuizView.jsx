@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { fetchQuestions } from '../api'
 import { useAuth } from '../auth/AuthContext'
+import ThemeToggle from './ThemeToggle'
 import {
   categoryTitle,
   filterQuestionIndexes,
@@ -194,6 +195,7 @@ export default function QuizView({ titleSuffix = '' }) {
           <button type="button" onClick={logout}>
             ออกจากระบบ
           </button>
+          <ThemeToggle />
         </div>
       </div>
 
@@ -266,7 +268,7 @@ export default function QuizView({ titleSuffix = '' }) {
                 </b>
                 {currentQuestion.explanation ? (
                   <>
-                    <hr style={{ border: 0, borderTop: '1px solid rgba(0,0,0,.12)' }} />
+                    <hr style={{ border: 0, borderTop: '1px solid var(--line)' }} />
                     {currentQuestion.explanation}
                   </>
                 ) : null}

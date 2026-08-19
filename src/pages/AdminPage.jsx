@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { fetchQuestions } from '../api'
 import { useAuth } from '../auth/AuthContext'
 import { answersKey, fetchUsers } from '../auth/auth'
+import ThemeToggle from '../components/ThemeToggle'
 import { categoryTitle, imagePath, qid } from '../utils'
 
 function countCorrect(questions, answers) {
@@ -113,6 +114,7 @@ export default function AdminPage() {
           <button type="button" onClick={logout}>
             ออกจากระบบ
           </button>
+          <ThemeToggle />
         </div>
       </div>
 
