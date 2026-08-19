@@ -5,6 +5,7 @@ import QuizView from './components/QuizView'
 import AdminPage from './pages/AdminPage'
 import AdminQuizPage from './pages/AdminQuizPage'
 import ExamPage from './pages/ExamPage'
+import GamePage from './pages/GamePage'
 import LoginPage from './pages/LoginPage'
 import TesterPage from './pages/TesterPage'
 import { ThemeProvider } from './theme/ThemeContext'
@@ -48,6 +49,14 @@ export default function App() {
               element={
                 <ProtectedRoute role="tester">
                   <QuizView />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/tester/game"
+              element={
+                <ProtectedRoute role="tester">
+                  <GamePage />
                 </ProtectedRoute>
               }
             />

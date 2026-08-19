@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { GraduationCap } from 'lucide-react'
+import { Gamepad2, GraduationCap } from 'lucide-react'
 import { useAuth } from '../auth/AuthContext'
 import { attemptsKey } from '../auth/auth'
 import ThemeToggle from '../components/ThemeToggle'
@@ -62,6 +62,10 @@ export default function TesterPage() {
           <Link to="/tester/practice" className="btn-link big-link">
             โหมดฝึกซ้อม (ดูเฉลยทันที)
           </Link>
+          <Link to="/tester/game" className="btn-link big-link">
+            <Gamepad2 size={18} strokeWidth={2} />
+            โหมดเกม (รู้ผลทันที · ผิดเกิน 10 = แพ้)
+          </Link>
         </div>
       </div>
 
@@ -90,7 +94,7 @@ export default function TesterPage() {
                     </td>
                     <td>
                       <span className={`role-badge ${a.pass ? 'admin' : 'tester'}`}>
-                        {a.pass ? 'ผ่าน' : 'ไม่ผ่าน'}
+                        {a.pass ? 'ผ่าน' : a.mode === 'game' ? 'แพ้' : 'ไม่ผ่าน'}
                       </span>
                     </td>
                   </tr>

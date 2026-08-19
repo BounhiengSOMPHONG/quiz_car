@@ -383,8 +383,13 @@ textarea:focus-visible {
   cursor: default;
 }
 
-.reveal-options .option:not(.correct):hover {
+.reveal-options .option:not(.correct):not(.wrong):hover {
   border-color: var(--line);
+}
+
+/* โหมดเกม: ปุ่มตัวเลือกไม่หรี่หลังเฉลย (โหมดฝึกใช้ div อยู่แล้ว) */
+.reveal-options .option:disabled {
+  opacity: 1;
 }
 
 .option.correct {
@@ -743,6 +748,7 @@ textarea:focus-visible {
 .big-link {
   padding: 14px 24px;
   font-size: 16px;
+  gap: 8px;
 }
 
 /* ---------- Exam ---------- */
@@ -873,6 +879,43 @@ button.big {
   .score-summary {
     width: 100%;
   }
+}
+
+/* ---------- โหมดเกม ---------- */
+
+.game-main {
+  max-width: 980px;
+  margin: 14px auto 0;
+}
+
+.game-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: var(--radius-pill);
+  border: 1px solid var(--line);
+  background: var(--surface-2);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.chip.ok {
+  background: var(--ok-soft);
+  border-color: var(--ok-line);
+  color: var(--ok-text);
+}
+
+.chip.bad {
+  background: var(--bad-soft);
+  border-color: var(--bad-line);
+  color: var(--bad-text);
 }
 
 /* ---------- Exam review ---------- */
